@@ -49,8 +49,12 @@ const Navbar = () => {
             to="/" 
             className="flex items-center space-x-2 group"
           >
-            <div className="bg-gradient-to-r from-whipsly-navy to-whipsly-blue p-2 rounded-lg group-hover:shadow-whipsly transition-all duration-200">
-              <span className="text-white font-bold text-xl">W</span>
+            <div className="group-hover:scale-105 transition-all duration-200">
+              <img 
+                src="/whipsly-logo-transparent.png" 
+                alt="Whipsly Logo" 
+                className="h-10 w-auto"
+              />
             </div>
             <span className="text-2xl font-display font-bold gradient-text hidden sm:block">
               Whipsly

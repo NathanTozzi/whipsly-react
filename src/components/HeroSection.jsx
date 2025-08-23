@@ -1,29 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search, ArrowRight, TrendingUp, Star, Users, MapPin } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import useVehicleData from '../hooks/useVehicleData';
+import SearchDropdown from './SearchDropdown';
 
 const HeroSection = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { getSuggestedSearches, popularSearches } = useVehicleData();
-
-  const [suggestions, setSuggestions] = useState([]);
-
-  // Update suggestions when search query changes
-  useEffect(() => {
-    if (searchQuery.length >= 2) {
-      const newSuggestions = getSuggestedSearches(searchQuery);
-      setSuggestions(newSuggestions);
-      setShowSuggestions(true);
-    } else {
-      setSuggestions(popularSearches.slice(0, 6));
-      setShowSuggestions(searchQuery.length === 0);
-    }
-  }, [searchQuery]);
+  const searchDropdownRef = useRef(null);
 
   const handleSearch = (query = searchQuery) => {
     if (!query.trim()) return;
@@ -36,9 +23,10 @@ const HeroSection = () => {
   };
 
   const handleSuggestionClick = (suggestion) => {
-    setSearchQuery(suggestion);
+    const searchTerm = typeof suggestion === 'string' ? suggestion : suggestion.text || suggestion;
+    setSearchQuery(searchTerm);
     setShowSuggestions(false);
-    handleSearch(suggestion);
+    handleSearch(searchTerm);
   };
 
   const handleKeyPress = (e) => {
@@ -63,7 +51,7 @@ const HeroSection = () => {
         <div className="absolute bottom-20 right-20 w-96 h-96 bg-whipsly-navy/20 rounded-full blur-3xl animate-bounce-gentle"></div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 relative z-10 pt-8">
         <div className="max-w-4xl mx-auto text-center">
           {/* Main Heading */}
           <motion.div
@@ -115,32 +103,15 @@ const HeroSection = () => {
               </div>
 
               {/* Search Suggestions */}
-              {showSuggestions && suggestions.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-white/20 overflow-hidden z-20"
-                >
-                  <div className="py-2">
-                    {searchQuery.length === 0 && (
-                      <div className="px-4 py-2 text-sm font-medium text-gray-500 border-b border-gray-100">
-                        Popular Searches
-                      </div>
-                    )}
-                    {suggestions.map((suggestion, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleSuggestionClick(suggestion)}
-                        className="w-full text-left px-4 py-3 hover:bg-whipsly-blue/10 text-gray-800 transition-colors duration-150 flex items-center space-x-3"
-                      >
-                        <Search className="h-4 w-4 text-gray-400" />
-                        <span>{suggestion}</span>
-                      </button>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
+              <AnimatePresence>
+                {showSuggestions && (
+                  <SearchDropdown
+                    ref={searchDropdownRef}
+                    searchTerm={searchQuery}
+                    onSelectSuggestion={handleSuggestionClick}
+                  />
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Quick Actions */}

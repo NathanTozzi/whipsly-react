@@ -126,7 +126,7 @@ const useAffiliateLink = () => {
       if (vehicleInfo.make) searchParams.append('make', vehicleInfo.make);
       if (vehicleInfo.model) searchParams.append('model', vehicleInfo.model);
       if (vehicleInfo.year) searchParams.append('year', vehicleInfo.year);
-      if (userLocation.zip) searchParams.append('zip', userLocation.zip);
+      if (userLocation && userLocation.zip) searchParams.append('zip', userLocation.zip);
       
       searchUrl += '/cars/?' + searchParams.toString();
     }
