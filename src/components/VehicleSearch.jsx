@@ -6,6 +6,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import useVehicleData from '../hooks/useVehicleData';
 import useAffiliateLink from '../hooks/useAffiliateLink';
+import EnhancedSearchBar from './EnhancedSearchBar';
 
 const VehicleSearch = ({ initialQuery = '', showHeader = true }) => {
   const {
@@ -16,6 +17,7 @@ const VehicleSearch = ({ initialQuery = '', showHeader = true }) => {
     sortBy,
     searchVehicles,
     updateFilters,
+    updateFiltersFromAI,
     clearFilters,
     setSortBy,
     getFilteredCount,
@@ -126,18 +128,16 @@ const VehicleSearch = ({ initialQuery = '', showHeader = true }) => {
           </div>
         )}
 
-        {/* Search Bar */}
+        {/* Enhanced AI Search Bar */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-4">
-            {/* Main Search */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => handleSearch(e.target.value)}
-                placeholder="Search by make, model, or year..."
-                className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-lg focus:border-whipsly-blue focus:outline-none transition-colors"
+            {/* AI-Powered Main Search */}
+            <div className="flex-1">
+              <EnhancedSearchBar
+                onSearch={handleSearch}
+                onFilterUpdate={updateFiltersFromAI}
+                initialQuery={searchQuery}
+                placeholder="Try: 'reliable family SUV under $30k' or 'fuel efficient Toyota'"
               />
             </div>
 

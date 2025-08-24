@@ -4,14 +4,17 @@ import { TrendingUp, Shield, Zap, Star, ArrowRight } from 'lucide-react';
 import HeroSection from '../components/HeroSection';
 import LeadForm from '../components/LeadForm';
 import FinancingCalculator from '../components/FinancingCalculator';
+import SearchExamples from '../components/SearchExamples';
 import useVehicleData from '../hooks/useVehicleData';
 import useAffiliateLink from '../hooks/useAffiliateLink';
+import { useNavigate } from 'react-router-dom';
 
 const Homepage = () => {
   const [showLeadForm, setShowLeadForm] = useState(false);
   const [showCalculator, setShowCalculator] = useState(false);
   const { getFeaturedVehicles, getBestDeals } = useVehicleData();
   const { getAffiliateLink } = useAffiliateLink();
+  const navigate = useNavigate();
 
   const featuredVehicles = getFeaturedVehicles(6);
   const bestDeals = getBestDeals(4);
@@ -118,6 +121,17 @@ const Homepage = () => {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* AI Search Examples Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <SearchExamples 
+            onExampleClick={(query) => {
+              navigate(`/search?q=${encodeURIComponent(query)}`);
+            }}
+          />
         </div>
       </section>
 

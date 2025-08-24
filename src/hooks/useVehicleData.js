@@ -157,6 +157,30 @@ const useVehicleData = () => {
     setFilters(prev => ({ ...prev, ...newFilters }));
   };
 
+  // Enhanced filter update for AI-parsed parameters
+  const updateFiltersFromAI = (aiParams) => {
+    const mappedFilters = {};
+    
+    // Map AI parameters to filter format
+    if (aiParams.priceMin) mappedFilters.priceMin = aiParams.priceMin;
+    if (aiParams.priceMax) mappedFilters.priceMax = aiParams.priceMax;
+    if (aiParams.make) mappedFilters.make = aiParams.make;
+    if (aiParams.fuelType) mappedFilters.fuelType = aiParams.fuelType;
+    if (aiParams.year) mappedFilters.year = aiParams.year;
+    if (aiParams.yearMin) {
+      // Convert year range to single year filter (you can enhance this)
+      mappedFilters.year = aiParams.yearMin.toString();
+    }
+    
+    // Handle body style mapping (would need to extend your data model)
+    if (aiParams.bodyStyle) {
+      // For now, this could be used to filter by model or other attributes
+      // You might want to add a bodyStyle field to your vehicle data
+    }
+    
+    setFilters(prev => ({ ...prev, ...mappedFilters }));
+  };
+
   const clearFilters = () => {
     setFilters({
       make: '',
@@ -239,6 +263,7 @@ const useVehicleData = () => {
     loadVehicles,
     searchVehicles,
     updateFilters,
+    updateFiltersFromAI,
     clearFilters,
     setSortBy,
     
